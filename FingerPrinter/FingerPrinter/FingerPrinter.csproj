@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="docfx" Version="2.57.2" />
     <PackageReference Include="Microsoft.DocAsCode.MarkdigEngine.Extensions" Version="2.57.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
 </Project>
