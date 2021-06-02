@@ -26,7 +26,7 @@ namespace FingerPrinter
 
         private static MarkdownContext.ReadFileDelegate ReadFilesFromJson()
         {
-            // urlForAlias maps config JSON key to (probably Github URL)
+            // urlForAlias maps config JSON key to (probably Github) URL
             var urlForAlias = new Dictionary<string, string>();
             // PathByRepository maps source URL to local path;
             var pathForURL = new Dictionary<string, string>();
@@ -115,13 +115,5 @@ namespace FingerPrinter
             var pipeline = pipelineBuilder.Build();
             return pipeline;
         }
-
-        static (string content, object file) ReadFile(string path, MarkdownObject origin)
-        {
-            var key = Path.Combine(Path.GetDirectoryName(InclusionContext.File.ToString()), path).Replace('\\', '/');
-
-            return (key, key);
-        }
-
     }
 }
