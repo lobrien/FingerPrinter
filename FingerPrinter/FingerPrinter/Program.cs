@@ -10,19 +10,12 @@ namespace FingerPrinter
         static void Main(string[] args)
         {
 
-            string docsRepoLocalRoot = @"c:\src\AzureDocs\azure-docs-pr\articles\machine-learning";
-            string filename = "tutorial-deploy-managed-endpoints-using-system-managed-identity.md";
+            var docsRepoLocalRoot = @"c:\src\AzureDocs\azure-docs-pr\articles\machine-learning";
+            var filename = "tutorial-deploy-managed-endpoints-using-system-managed-identity.md";
             var fullPath = Path.Combine(docsRepoLocalRoot, filename);
             var content = File.ReadAllText(fullPath);
 
             var els = Fingerprinter.ExtractCodeElements(content);
-            /*
-            foreach(var el in els)
-            {
-                System.Console.WriteLine(el);
-            }
-            */
-
             var el = els.Where(el => el.Contains("azureml-examples-main")).First();
 
             var fingerprint = Fingerprinter.Fingerprint(el);
