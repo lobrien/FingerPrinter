@@ -15,13 +15,25 @@ namespace FingerPrinter
     {
         static void Main(string[] args)
         {
-            var readFileFn = ReadFilesFromJson();
 
             var src = ":::code language=\"shell\" source=\"~/azureml-examples-main/cli/how-to-batch-score.sh\" id=\"create_batch_endpoint\" :::";
+
+            var fingerprint = Fingerprinter.Fingerprint(src);
+            var newSnippet = Fingerprinter.AddFingerprint(src, fingerprint);
+            Console.WriteLine(newSnippet);
+        }
+
+    }
+
+    static class Fingerprinter
+    {
+        public static string Fingerprint(string codeElement)
+        {
+            var readFileFn = ReadFilesFromJson();
             var buildPipeline = BuildPipeline(readFileFn);
-            var html = RenderCodeSnippetToHtml(buildPipeline, src);
+            var html = RenderCodeSnippetToHtml(buildPipeline, codeElement);
             var fingerprint = Md5Hash(html);
-            Console.WriteLine(fingerprint);
+            return fingerprint;
         }
 
         private static MarkdownContext.ReadFileDelegate ReadFilesFromJson()
@@ -41,7 +53,7 @@ namespace FingerPrinter
             {
                 var root = (JObject)JToken.ReadFrom(reader);
                 var dependentRepositories = root["dependent_repositories"];
-                foreach(var dependentRepository in dependentRepositories)
+                foreach (var dependentRepository in dependentRepositories)
                 {
                     var path_to_root = dependentRepository["path_to_root"].ToString();
                     var url_for_alias = dependentRepository["url"].ToString();
@@ -114,6 +126,13 @@ namespace FingerPrinter
 
             var pipeline = pipelineBuilder.Build();
             return pipeline;
+        }
+
+        static public string AddFingerprint(string snippet, string fingerprint)
+        {
+            var pattern = @"(?<content>:::[\s\S]*):::";
+            var replacement = $"${{content}} fingerprint=\"{fingerprint}\" :::";
+            return Regex.Replace(snippet, pattern, replacement);
         }
     }
 }
